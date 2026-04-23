@@ -1,0 +1,83 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helpers
+    function isSignedIn() { return request.auth != null; }
+    function isAdmin() { return isSignedIn() && exists(/databases/$(database)/documents/admins/$(request.auth.uid)); }
+    function isValidId(id) { return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$'); }
+
+    // Validation Functions
+    function isValidShow(data) {
+      return data.keys().hasAll(['name', 'date', 'city', 'ticketLink', 'createdAt']) &&
+             data.keys().size() == 5 &&
+             data.name is string && data.name.size() > 0 && data.name.size() <= 200 &&
+             data.date is timestamp &&
+             data.city is string && data.city.size() > 0 && data.city.size() <= 200 &&
+             data.ticketLink is string && data.ticketLink.size() <= 1000 &&
+             data.createdAt == request.time;
+    }
+
+    function isValidRelease(data) {
+      return data.keys().hasAll(['title', 'coverUrl', 'spotifyLink', 'type', 'createdAt']) &&
+             data.keys().size() == 5 &&
+             data.title is string && data.title.size() > 0 && data.title.size() <= 200 &&
+             data.coverUrl is string && data.coverUrl.size() <= 1000 &&
+             data.spotifyLink is string && data.spotifyLink.size() <= 1000 &&
+             data.type in ['single', 'ep', 'album'] &&
+             data.createdAt == request.time;
+    }
+
+    function isValidPhoto(data) {
+      return data.keys().hasAll(['imageUrl', 'description', 'createdAt']) &&
+             data.keys().size() == 3 &&
+             data.imageUrl is string && data.imageUrl.size() <= 1000 &&
+             data.description is string && data.description.size() <= 500 &&
+             data.createdAt == request.time;
+    }
+
+    function isValidMetric(data) {
+      return data.keys().hasAll(['label', 'value', 'category']) &&
+             data.keys().size() == 3 &&
+             data.label is string && data.label.size() <= 100 &&
+             data.value is number &&
+             data.category in ['releases', 'countries', 'tours'];
+    }
+
+    // Collection Rules
+    match /shows/{showId} {
+      allow read: if true;
+      allow create: if isAdmin() && isValidId(showId) && isValidShow(request.resource.data);
+      allow update: if isAdmin() && isValidShow(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    match /releases/{releaseId} {
+      allow read: if true;
+      allow create: if isAdmin() && isValidId(releaseId) && isValidRelease(request.resource.data);
+      allow update: if isAdmin() && isValidRelease(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    match /gallery/{photoId} {
+      allow read: if true;
+      allow create: if isAdmin() && isValidId(photoId) && isValidPhoto(request.resource.data);
+      allow update: if isAdmin() && isValidPhoto(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    match /metrics/{metricId} {
+      allow read: if true;
+      allow write: if isAdmin() && isValidId(metricId) && isValidMetric(request.resource.data);
+    }
+
+    match /admins/{userId} {
+      allow read: if isSignedIn(); // Allow auth users to check if they are admin
+      allow write: if false; // Admins must be provisioned manually initially
+    }
+  }
+}
