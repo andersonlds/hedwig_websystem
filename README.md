@@ -1,20 +1,50 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# Hedwig — Progressive Melodic Psytrance
 
-# Run and deploy your AI Studio app
+Site oficial da HEDWIG, construído com React + Vite + TypeScript + Supabase.
 
-This contains everything you need to run your app locally.
+## Stack
 
-View your app in AI Studio: https://ai.studio/apps/ec20b2f2-fa90-4e04-b36d-579791f15184
+- **Frontend**: React 19, TypeScript, Vite 6, Tailwind CSS v4
+- **Backend / DB**: Supabase (Auth + Postgres)
+- **Deploy**: Vercel
 
-## Run Locally
+## Variáveis de Ambiente
 
-**Prerequisites:**  Node.js
+Crie um arquivo `.env` com base no `.env.example`:
 
+```bash
+cp .env.example .env
+```
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+Preencha os valores do seu projeto no [Supabase Dashboard](https://supabase.com/dashboard):
+
+```env
+VITE_SUPABASE_URL=https://xxxx.supabase.co
+VITE_SUPABASE_ANON_KEY=eyJ...
+```
+
+> ⚠️ Nunca commite o arquivo `.env` — ele está no `.gitignore`.
+
+## Rodando localmente
+
+```bash
+npm install
+npm run dev
+```
+
+## Deploy na Vercel
+
+1. Importe o repositório na [Vercel](https://vercel.com/new)
+2. Configure as variáveis de ambiente no painel da Vercel:
+   - `VITE_SUPABASE_URL`
+   - `VITE_SUPABASE_ANON_KEY`
+3. O build command é `vite build` e o output directory é `dist` (detectado automaticamente)
+
+## Scripts
+
+| Comando | Descrição |
+|---------|-----------|
+| `npm run dev` | Inicia servidor de desenvolvimento |
+| `npm run build` | Gera o bundle de produção |
+| `npm run preview` | Pré-visualiza o build de produção |
+| `npm run lint` | Verifica erros de TypeScript |
