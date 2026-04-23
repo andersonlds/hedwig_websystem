@@ -27,40 +27,37 @@ export default function Contact() {
     setLoading(true);
 
     try {
-      // 1. Verificar no banco se este e-mail já enviou mensagem nos últimos 5 dias
-      const fiveDaysAgo = new Date();
-      fiveDaysAgo.setDate(fiveDaysAgo.getDate() - 5);
+      // 1. Chamar Edge Function (server-side) — verifica rate limit e salva no banco
+      //    usando service_role key, sem expor dados ao cliente.
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+      const edgeFunctionUrl = `${supabaseUrl}/functions/v1/submit-contact`;
 
-      const { data: existingContact, error: checkError } = await supabase
-        .from('contacts')
-        .select('id')
-        .eq('email', formData.email)
-        .gt('created_at', fiveDaysAgo.toISOString())
-        .limit(1);
+      const edgeResponse = await fetch(edgeFunctionUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': import.meta.env.VITE_SUPABASE_ANON_KEY,
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          message: formData.message,
+        }),
+      });
 
-      if (checkError) throw checkError;
-
-      if (existingContact && existingContact.length > 0) {
+      if (edgeResponse.status === 429) {
+        // Rate limit atingido — e-mail já enviado nos últimos 5 dias
         alert("Aguarde - Entraremos em Contato");
-        setLoading(false);
         return;
       }
 
-      // 2. Salvar no Banco de Dados
-      const { error: saveError } = await supabase
-        .from('contacts')
-        .insert([
-          { 
-            name: formData.name, 
-            email: formData.email, 
-            message: formData.message 
-          }
-        ]);
+      if (!edgeResponse.ok) {
+        const err = await edgeResponse.json();
+        throw new Error(err.message || 'Erro ao processar contato.');
+      }
 
-      if (saveError) throw saveError;
-
-      // 3. Enviar o e-mail via FormSubmit.co
-      const response = await fetch(`https://formsubmit.co/ajax/${bookingEmail}`, {
+      // 2. Contato salvo com sucesso — agora envia o e-mail via FormSubmit.co
+      const emailResponse = await fetch(`https://formsubmit.co/ajax/${bookingEmail}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -75,7 +72,7 @@ export default function Contact() {
         }),
       });
 
-      if (response.ok) {
+      if (emailResponse.ok) {
         setSubmitted(true);
         setTimeout(() => setSubmitted(false), 5000);
         setFormData({ name: '', email: '', message: '' });
