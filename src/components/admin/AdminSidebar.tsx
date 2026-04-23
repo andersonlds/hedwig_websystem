@@ -1,13 +1,13 @@
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Calendar, Music, Image as ImageIcon, BarChart3, LogOut, UserCheck, Home } from 'lucide-react';
+import { Calendar, Music, Image as ImageIcon, LogOut, UserCheck, Home } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import HedwigLogo from '../common/HedwigLogo';
 
 export default function AdminSidebar() {
   const { logout } = useAuth();
   const location = useLocation();
 
   const menuItems = [
-    { name: 'Dashboard', icon: LayoutDashboard, path: '/admin' },
     { name: 'Site', icon: Home, path: '/admin/hero' },
     { name: 'Agenda', icon: Calendar, path: '/admin/agenda' },
     { name: 'Lançamentos', icon: Music, path: '/admin/releases' },
@@ -18,8 +18,8 @@ export default function AdminSidebar() {
   return (
     <aside className="w-72 bg-secondary/30 border-r border-border min-h-screen flex flex-col p-8 sticky top-0">
       <Link to="/" className="flex items-center gap-3 mb-16">
-        <div className="h-8 w-8 rounded-lg bg-primary grid place-items-center">
-          <Music className="text-background h-4 w-4" />
+        <div className="h-8 w-8 rounded-lg bg-primary grid place-items-center overflow-hidden p-0.5">
+          <HedwigLogo className="text-background h-full w-full" />
         </div>
         <span className="font-display font-black tracking-widest text-lg">HEDWIG</span>
       </Link>

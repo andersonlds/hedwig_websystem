@@ -23,7 +23,7 @@ export default function Vitals() {
        <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 blur-3xl rounded-full -mr-16 -mt-16" />
        <div className="relative z-10 h-full flex flex-col">
           <h3 className="text-[10px] font-black text-white/40 tracking-[0.3em] uppercase mb-8 flex items-center gap-2">
-            <BarChart3 size={12} className="text-primary" /> Vitals
+            <BarChart3 size={12} className="text-primary" /> HIGHLIGHTS
           </h3>
           <div className="grid grid-cols-2 gap-4">
             <div className="p-5 bg-white/5 border border-white/10 rounded-2xl group-hover:border-primary/30 transition-all">

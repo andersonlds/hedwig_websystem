@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Music } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
+import HedwigLogo from '../common/HedwigLogo';
 
 export default function Multimedia() {
   const [config, setConfig] = useState<any>(null);
@@ -20,8 +20,8 @@ export default function Multimedia() {
   return (
     <div id="playlist" className="col-span-12 md:col-span-8 row-span-1 glass rounded-2xl md:rounded-3xl p-6 flex flex-col md:flex-row items-center gap-8 group">
        <div className="flex items-center gap-4 flex-1">
-          <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center shadow-glow group-hover:scale-110 transition-transform">
-            <Music size={20} className="text-black" />
+          <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center shadow-glow group-hover:scale-110 transition-transform overflow-hidden p-1.5">
+            <HedwigLogo className="w-full h-full" />
           </div>
           <div>
              <h4 className="text-sm font-black uppercase tracking-[0.2em]">{title}</h4>

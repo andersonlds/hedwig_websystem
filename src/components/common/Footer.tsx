@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Music, Instagram, Youtube, ExternalLink } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
+import HedwigLogo from './HedwigLogo';
 
 export default function Footer() {
   const [config, setConfig] = useState<any>(null);
@@ -25,8 +26,8 @@ export default function Footer() {
         <div className="grid md:grid-cols-4 gap-12">
           <div className="md:col-span-2">
             <div className="flex items-center gap-3 mb-6">
-              <div className="h-8 w-8 rounded-lg bg-primary grid place-items-center">
-                <Music className="text-background h-4 w-4" />
+              <div className="h-8 w-8 rounded-lg bg-primary grid place-items-center overflow-hidden p-0.5">
+                <HedwigLogo className="text-background h-full w-full" />
               </div>
               <span className="font-display font-black tracking-widest text-xl text-foreground">HEDWIG</span>
             </div>

@@ -8,7 +8,7 @@ export default function ReleaseMarquee({ releases }: ReleaseMarqueeProps) {
   return (
     <div id="lancamentos" className="col-span-12 row-span-1 glass bg-primary/5 rounded-2xl md:rounded-3xl overflow-hidden flex items-center h-20 md:h-24">
       <div className="hidden md:flex flex-shrink-0 font-black text-[10px] text-primary tracking-widest mx-8 border-r border-primary/20 pr-8 h-full items-center uppercase">
-        Discography
+        Discografia
       </div>
       <div className="flex-1 overflow-hidden relative">
         <div className="flex gap-16 animate-marquee w-max items-center py-2 h-full">

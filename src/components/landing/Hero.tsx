@@ -34,7 +34,7 @@ export default function Hero() {
       <div className="absolute inset-0 z-0">
          <img 
            src={bgImage} 
-           className="w-full h-full object-cover opacity-60 mix-blend-luminosity grayscale contrast-125"
+           className="w-full h-full object-cover opacity-60 mix-blend-luminosity grayscale contrast-125 transition-all duration-700 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105 group-hover:mix-blend-normal"
            alt="Hero background"
          />
       </div>

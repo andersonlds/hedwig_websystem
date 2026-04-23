@@ -105,7 +105,7 @@ export default function Contact() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" />
                    </svg>
                 </div>
-                <h3 className="text-xl font-display font-black mb-2 tracking-tight">SINAL ENVIADO!</h3>
+                <h3 className="text-xl font-display font-black mb-2 tracking-tight">E-MAIL ENVIADO!</h3>
                 <p className="text-white/40 text-sm">Verifique seu aplicativo de e-mail para confirmar o envio.</p>
              </div>
           ) : (
@@ -141,7 +141,7 @@ export default function Contact() {
                  disabled={loading}
                  className="w-full py-4 bg-primary text-black font-black text-xs tracking-[0.2em] rounded-xl hover:bg-primary-glow hover:shadow-glow transition-all disabled:opacity-50 disabled:cursor-wait"
                >
-                 {loading ? 'TRANSMITTING...' : 'SEND SIGNAL'}
+                 {loading ? 'ENVIANDO...' : 'ENVIAR E-MAIL'}
                </button>
             </form>
           )}
