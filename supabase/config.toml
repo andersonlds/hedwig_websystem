@@ -1,5 +1,4 @@
 # Supabase project configuration
 # Referência: https://supabase.com/docs/guides/cli/config
 
-[project]
 project_id = "nnszbngwzhfmnrjhgcdp"

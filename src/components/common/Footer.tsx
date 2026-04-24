@@ -70,14 +70,7 @@ export default function Footer() {
 
         {/* Rodapé inferior */}
         <div className="mt-10 min-[900px]:mt-16 pt-8 border-t border-border flex flex-col min-[900px]:flex-row items-center justify-between gap-4">
-          <p className="text-xs text-muted-foreground tracking-widest uppercase text-center min-[900px]:text-left">
-            © {new Date().getFullYear()} HEDWIG. TODOS OS DIREITOS RESERVADOS
-          </p>
-          <div className="flex items-center gap-4 text-[10px] font-bold tracking-[0.2em] text-muted-foreground uppercase">
-            <span className="hidden min-[900px]:inline">HEDWIG // SONIC ARCHITECTURE</span>
-            <span className="h-1 w-1 bg-primary rounded-full hidden min-[900px]:inline" />
-            <span>PROGRESSIVE MELODIC PSYTRANCE</span>
-          </div>
+          <p className="text-xs text-muted-foreground tracking-widest uppercase text-center min-[900px]:text-left">© {new Date().getFullYear()} HEDWIG. TODOS OS DIREITOS RESERVADOS</p>
         </div>
       </div>
 

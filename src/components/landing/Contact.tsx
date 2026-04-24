@@ -4,7 +4,6 @@ import { supabase } from '../../lib/supabase';
 export default function Contact() {
   const [config, setConfig] = useState<any>(null);
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
-
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -27,36 +26,18 @@ export default function Contact() {
     setLoading(true);
 
     try {
-      // 1. Chamar Edge Function (server-side) — verifica rate limit e salva no banco
-      //    usando service_role key, sem expor dados ao cliente.
-      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-      const edgeFunctionUrl = `${supabaseUrl}/functions/v1/submit-contact`;
-
-      const edgeResponse = await fetch(edgeFunctionUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'apikey': import.meta.env.VITE_SUPABASE_ANON_KEY,
-        },
-        body: JSON.stringify({
+      // 1. Salva diretamente no Supabase (Sem precisar de Edge Function)
+      const { error: dbError } = await supabase
+        .from('contacts')
+        .insert([{
           name: formData.name,
           email: formData.email,
-          message: formData.message,
-        }),
-      });
+          message: formData.message
+        }]);
 
-      if (edgeResponse.status === 429) {
-        // Rate limit atingido — e-mail já enviado nos últimos 5 dias
-        alert("Aguarde - Entraremos em Contato");
-        return;
-      }
+      if (dbError) throw dbError;
 
-      if (!edgeResponse.ok) {
-        const err = await edgeResponse.json();
-        throw new Error(err.message || 'Erro ao processar contato.');
-      }
-
-      // 2. Contato salvo com sucesso — agora envia o e-mail via FormSubmit.co
+      // 2. Envia o e-mail via FormSubmit.co
       const emailResponse = await fetch(`https://formsubmit.co/ajax/${bookingEmail}`, {
         method: "POST",
         headers: {
@@ -67,26 +48,29 @@ export default function Contact() {
           name: formData.name,
           email: formData.email,
           message: formData.message,
-          _subject: `Novo Contato Registrado: ${formData.name}`,
+          _subject: `Novo Contato HEDWIG: ${formData.name}`,
           _template: "table"
         }),
       });
 
       if (emailResponse.ok) {
         setSubmitted(true);
-        setTimeout(() => setSubmitted(false), 5000);
         setFormData({ name: '', email: '', message: '' });
+        setTimeout(() => setSubmitted(false), 5000);
+      } else {
+        throw new Error('Erro ao enviar e-mail.');
       }
-    } catch (error) {
+
+    } catch (error: any) {
       console.error("Erro no processo de contato:", error);
-      alert("Houve um erro ao processar seu sinal. Tente novamente mais tarde.");
+      alert("Erro ao enviar contato. Verifique sua conexão ou tente novamente mais tarde.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-     <div id="contato" className="col-span-12 glass rounded-2xl lg:rounded-[2.5rem] p-6 lg:p-12 mb-12 relative overflow-hidden group">
+    <div id="contato" className="col-span-12 glass rounded-2xl lg:rounded-[2.5rem] p-6 lg:p-12 mb-12 relative overflow-hidden group">
        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_50%,rgba(147,51,234,0.1)_0%,transparent_50%)] pointer-events-none" />
        <div className="relative z-10 grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           <div>
@@ -103,7 +87,7 @@ export default function Contact() {
                    </svg>
                 </div>
                 <h3 className="text-xl font-display font-black mb-2 tracking-tight">E-MAIL ENVIADO!</h3>
-                <p className="text-white/40 text-sm">Verifique seu aplicativo de e-mail para confirmar o envio.</p>
+                <p className="text-white/40 text-sm">Obrigado pelo contato. Responderemos em breve.</p>
              </div>
           ) : (
             <form className="space-y-4" onSubmit={handleSubmit}>

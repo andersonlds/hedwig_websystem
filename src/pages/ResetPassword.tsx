@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, FormEvent } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { Lock, CheckCircle2, AlertCircle, ShieldCheck } from 'lucide-react';
@@ -38,7 +38,7 @@ export default function ResetPassword() {
     return () => subscription.unsubscribe();
   }, []);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
 
@@ -192,7 +192,7 @@ export default function ResetPassword() {
               Sua senha foi atualizada com sucesso. Redirecionando para o login...
             </p>
             <div className="mt-6 h-1 w-full bg-white/5 rounded-full overflow-hidden">
-              <div className="h-full bg-primary rounded-full animate-[grow_3s_linear_forwards]" style={{ width: '0%', animation: 'none', transition: 'width 3s linear', width: '100%' }} />
+              <div className="h-full bg-primary rounded-full animate-[grow_3s_linear_forwards]" style={{ animation: 'none', transition: 'width 3s linear', width: '100%' }} />
             </div>
           </motion.div>
         )}
