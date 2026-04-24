@@ -40,7 +40,7 @@ export default function Gallery({ photos }: GalleryProps) {
 
   return (
     <>
-      <div id="galeria" className="col-span-12 md:col-span-8 row-span-2 grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div id="galeria" className="col-span-12 lg:col-span-8 row-span-2 grid grid-cols-2 md:grid-cols-4 gap-3 lg:gap-4">
         {displayPhotos.length > 0 ? displayPhotos.map((photo, index) => (
           <div 
             key={photo.id}

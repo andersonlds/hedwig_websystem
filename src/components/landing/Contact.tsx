@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, FormEvent } from 'react';
 import { supabase } from '../../lib/supabase';
 
 export default function Contact() {
@@ -22,7 +22,7 @@ export default function Contact() {
   const description = config?.contact_description || 'Disponível para bookings, parcerias e demos. Transformando mentes através de batidas complexas.';
   const bookingEmail = config?.booking_email || 'booking@hedwig.live';
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
 
@@ -86,12 +86,12 @@ export default function Contact() {
   };
 
   return (
-    <div id="contato" className="col-span-12 glass rounded-2xl md:rounded-[2.5rem] p-8 md:p-12 mb-12 relative overflow-hidden group">
+     <div id="contato" className="col-span-12 glass rounded-2xl lg:rounded-[2.5rem] p-6 lg:p-12 mb-12 relative overflow-hidden group">
        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_50%,rgba(147,51,234,0.1)_0%,transparent_50%)] pointer-events-none" />
-       <div className="relative z-10 grid md:grid-cols-2 gap-12 items-center">
+       <div className="relative z-10 grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           <div>
              <span className="text-primary font-mono text-[10px] mb-4 tracking-[0.4em] uppercase block">{label}</span>
-             <h2 className="text-3xl md:text-5xl font-display font-black leading-tight tracking-tighter mb-4">{line1} <br /> <span className="text-gradient">{line2}</span></h2>
+             <h2 className="text-2xl md:text-3xl lg:text-5xl font-display font-black leading-tight tracking-tighter mb-4">{line1} <br /> <span className="text-gradient">{line2}</span></h2>
              <p className="text-white/40 text-sm max-w-sm mb-8">{description}</p>
              <a href={`mailto:${bookingEmail}`} className="text-primary text-xs font-black uppercase tracking-widest underline underline-offset-8 decoration-primary/20 hover:decoration-primary transition-all">{bookingEmail}</a>
           </div>
@@ -107,7 +107,7 @@ export default function Contact() {
              </div>
           ) : (
             <form className="space-y-4" onSubmit={handleSubmit}>
-               <div className="grid grid-cols-2 gap-4">
+               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
                   <input 
                     type="text" 
                     placeholder="NAME" 
@@ -125,7 +125,7 @@ export default function Contact() {
                     className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-[10px] font-bold tracking-widest text-white focus:border-primary outline-none transition-all" 
                   />
                </div>
-               <textarea 
+               <textarea
                  rows={3} 
                  placeholder="MESSAGE" 
                  required

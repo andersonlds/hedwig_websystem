@@ -29,7 +29,9 @@ export default function Hero() {
   const spotifyLink = config?.spotify_link || '#lancamentos';
 
   return (
-    <div id="sobre" className="col-span-12 md:col-span-8 row-span-1 md:row-span-3 min-h-[400px] rounded-2xl md:rounded-3xl relative overflow-hidden glass group">
+    // lg: (1024px+) → lado a lado 8/12 colunas
+    // abaixo de lg → empilhado col-span-12
+    <div id="sobre" className="col-span-12 lg:col-span-8 lg:row-span-3 min-h-[360px] lg:min-h-[480px] rounded-2xl lg:rounded-3xl relative overflow-hidden glass group">
       <div className="absolute inset-0 bg-gradient-to-r from-black/90 to-transparent z-10" />
       <div className="absolute inset-0 z-0">
          <img 
@@ -39,14 +41,14 @@ export default function Hero() {
          />
       </div>
       
-      <div className="relative z-20 h-full flex flex-col justify-center p-8 md:p-12 lg:p-16">
+      <div className="relative z-20 h-full flex flex-col justify-center p-6 md:p-10 lg:p-12 xl:p-16">
         <ScrollReveal>
-          <p className="text-primary font-mono text-xs mb-4 tracking-[0.4em] uppercase">{subtitle}</p>
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-display font-black mb-8 leading-[0.95] tracking-tighter">
+          <p className="text-primary font-mono text-[10px] mb-3 tracking-[0.4em] uppercase">{subtitle}</p>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-display font-black mb-6 leading-[0.95] tracking-tighter">
             {line1} <br/><span className="text-gradient">{line2}</span>
           </h1>
           <div className="flex flex-wrap gap-4">
-            <a href={spotifyLink} target={spotifyLink.startsWith('http') ? '_blank' : '_self'} rel="noreferrer" className="bg-primary text-black px-8 py-4 rounded-full font-bold text-xs uppercase tracking-widest hover:bg-primary-glow transition-all flex items-center gap-2 group shadow-glow">
+            <a href={spotifyLink} target={spotifyLink.startsWith('http') ? '_blank' : '_self'} rel="noreferrer" className="bg-primary text-black px-6 md:px-8 py-3 md:py-4 rounded-full font-bold text-xs uppercase tracking-widest hover:bg-primary-glow transition-all flex items-center gap-2 group shadow-glow">
               LISTEN ON SPOTIFY <Play size={14} fill="black" />
             </a>
           </div>

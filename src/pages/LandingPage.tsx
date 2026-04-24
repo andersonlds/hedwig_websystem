@@ -16,10 +16,10 @@ export default function LandingPage() {
   const { data: photos } = useSupabaseQuery<GalleryPhoto>('gallery', 'order_index', true);
 
   return (
-    <div className="min-h-screen bg-transparent p-4 md:p-6 lg:p-8 flex flex-col gap-6 max-w-7xl mx-auto">
+    <div className="min-h-screen bg-transparent p-4 md:p-5 lg:p-8 flex flex-col gap-4 md:gap-5 lg:gap-6 max-w-7xl mx-auto">
       <Navbar />
 
-      <main className="grid grid-cols-12 gap-4 lg:gap-6 mt-20">
+      <main className="grid grid-cols-12 gap-4 md:gap-5 lg:gap-6 mt-20">
         <Hero />
         <Vitals />
         <Agenda shows={shows} />

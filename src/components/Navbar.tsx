@@ -39,26 +39,26 @@ export default function Navbar() {
           ${isMobileMenuOpen ? '' : isScrolled ? 'py-4' : 'py-6'}`}
       >
         <div
-          className={`mx-auto max-w-7xl px-6 flex items-center justify-between transition-all duration-500
+          className={`mx-auto max-w-7xl px-4 nav:px-6 flex items-center justify-between transition-all duration-500
             ${!isMobileMenuOpen && isScrolled ? 'glass rounded-full py-2 shadow-lg' : ''}
             ${isMobileMenuOpen ? 'py-5' : ''}`}
         >
-          <a href="#top" className="flex items-center gap-3 group">
-            <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-primary to-primary-glow shadow-glow grid place-items-center">
-              <Music className="text-background h-5 w-5" />
+          <a href="#top" className="flex items-center gap-3 group flex-shrink-0">
+            <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-primary to-primary-glow shadow-glow grid place-items-center">
+              <Music className="text-background h-4 w-4" />
             </div>
-            <span className="font-display font-black tracking-widest text-lg md:text-xl text-foreground group-hover:text-primary transition-colors">
+            <span className="font-display font-black tracking-widest text-base nav:text-lg text-foreground group-hover:text-primary transition-colors">
               HEDWIG
             </span>
           </a>
 
-          {/* Desktop Nav */}
-          <div className="hidden md:flex items-center gap-8">
+          {/* Desktop Nav — visível apenas em nav+ (900px+) */}
+          <div className="hidden nav:flex items-center gap-4 xl:gap-7">
             {navLinks.map((link) => (
               <a
                 key={link.name}
                 href={isHome ? link.href : `/${link.href}`}
-                className="text-xs font-bold tracking-widest text-muted-foreground hover:text-primary transition-colors relative group"
+                className="text-[10px] nav:text-[11px] xl:text-xs font-bold tracking-widest text-muted-foreground hover:text-primary transition-colors relative group"
               >
                 {link.name}
                 <span className="absolute -bottom-1 left-0 w-0 h-px bg-primary transition-all group-hover:w-full" />
@@ -66,15 +66,15 @@ export default function Navbar() {
             ))}
             <Link
               to="/admin"
-              className="h-10 w-10 rounded-full border border-border flex items-center justify-center hover:bg-secondary transition-all"
+              className="h-9 w-9 rounded-full border border-border flex items-center justify-center hover:bg-secondary transition-all"
             >
               <User className="h-4 w-4" />
             </Link>
           </div>
 
-          {/* Mobile Toggle */}
+          {/* Mobile Toggle — visível abaixo de 900px */}
           <button
-            className="md:hidden text-foreground p-2 z-10 relative"
+            className="nav:hidden text-foreground p-2 z-10 relative"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             aria-label={isMobileMenuOpen ? 'Fechar menu' : 'Abrir menu'}
           >
@@ -93,9 +93,9 @@ export default function Navbar() {
         </div>
       </nav>
 
-      {/* ── Overlay full-screen do menu mobile ──
-           Renderizado fora do <nav> para evitar conflito de stacking context.
-           z-40 = abaixo do nav (z-50), acima de todo o conteúdo da página. ── */}
+      {/* ── Overlay full-screen do menu mobile ─────────────────────────────
+           Visível abaixo de 900px. Renderizado fora do <nav> para evitar
+           conflito de stacking context. z-40 = abaixo do nav (z-50). ── */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
@@ -104,7 +104,7 @@ export default function Navbar() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25 }}
-            className="md:hidden fixed inset-0 z-40 flex flex-col"
+            className="nav:hidden fixed inset-0 z-40 flex flex-col"
             style={{ background: 'rgba(10, 6, 20, 0.98)' }}
           >
             {/* Espaço reservado para a barra do nav acima */}
