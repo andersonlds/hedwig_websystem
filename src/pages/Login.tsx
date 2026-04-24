@@ -1,12 +1,12 @@
 import { useEffect, useState, FormEvent } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { LogIn, ShieldAlert, Mail, Lock, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { LogIn, ShieldAlert, Mail, Lock, AlertCircle, CheckCircle2, LogOut } from 'lucide-react';
 import { motion } from 'motion/react';
 import HedwigLogo from '../components/common/HedwigLogo';
 
 export default function Login() {
-  const { user, isAdmin, login, register, loading } = useAuth();
+  const { user, isAdmin, login, register, logout, loading } = useAuth();
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -85,18 +85,18 @@ export default function Login() {
       <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-primary/5 blur-[120px] rounded-full" />
 
       <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
+        initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="w-full max-w-md glass rounded-[2.5rem] p-10 md:p-12 text-center relative z-10"
+        className="w-full max-w-[380px] glass rounded-[2rem] md:rounded-[2.5rem] p-8 md:p-10 text-center relative z-10"
       >
-        <div className="h-16 w-16 rounded-2xl bg-gradient-to-br from-primary to-primary-glow shadow-glow grid place-items-center mx-auto mb-8 overflow-hidden p-2">
+        <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-primary to-primary-glow shadow-glow grid place-items-center mx-auto mb-6 overflow-hidden p-2">
           <HedwigLogo className="text-background h-full w-full" />
         </div>
 
-        <h1 className="text-3xl font-display font-black text-foreground mb-4 tracking-tight uppercase">
+        <h1 className="text-2xl font-display font-black text-foreground mb-3 tracking-tight uppercase">
           {isRegistering ? 'Criar Conta' : 'Painel Admin'}
         </h1>
-        <p className="text-muted-foreground text-sm mb-10 leading-relaxed">
+        <p className="text-muted-foreground text-[11px] md:text-xs mb-8 leading-relaxed px-2">
           {isRegistering
             ? 'Cadastre-se para solicitar acesso ao gerenciamento.'
             : 'Área restrita. Entre com suas credenciais de administrador.'}
@@ -104,9 +104,17 @@ export default function Login() {
 
         {/* Pending approval message */}
         {user && !isAdmin && (
-          <div className="p-4 rounded-2xl bg-yellow-500/10 border border-yellow-500/20 text-yellow-400 text-xs font-bold flex items-center gap-3 mb-8 text-left">
-            <ShieldAlert className="h-5 w-5 shrink-0" />
-            <span>Acesso Pendente: Sua conta ainda não foi aprovada pelo administrador.</span>
+          <div className="space-y-4 mb-8">
+            <div className="p-4 rounded-2xl bg-yellow-500/10 border border-yellow-500/20 text-yellow-400 text-xs font-bold flex items-center gap-3 text-left">
+              <ShieldAlert className="h-5 w-5 shrink-0" />
+              <span>Acesso Pendente: Sua conta ainda não foi aprovada pelo administrador.</span>
+            </div>
+            <button 
+              onClick={() => logout()}
+              className="text-[10px] font-bold text-primary hover:text-primary-glow uppercase tracking-widest flex items-center gap-2 mx-auto"
+            >
+              <LogOut className="h-3 w-3" /> Sair desta conta
+            </button>
           </div>
         )}
 
@@ -139,7 +147,7 @@ export default function Login() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="admin@exemplo.com"
-                  className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-14 pr-6 text-sm focus:border-primary focus:outline-none transition-colors"
+                  className="w-full bg-white/5 border border-white/10 rounded-xl md:rounded-2xl py-3.5 md:py-4 pl-12 md:pl-14 pr-6 text-sm focus:border-primary focus:outline-none transition-colors"
                 />
               </div>
             </div>
@@ -154,7 +162,7 @@ export default function Login() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-14 pr-6 text-sm focus:border-primary focus:outline-none transition-colors"
+                  className="w-full bg-white/5 border border-white/10 rounded-xl md:rounded-2xl py-3.5 md:py-4 pl-12 md:pl-14 pr-6 text-sm focus:border-primary focus:outline-none transition-colors"
                 />
               </div>
             </div>

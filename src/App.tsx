@@ -1,3 +1,4 @@
+import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import LandingPage from './pages/LandingPage';
@@ -5,6 +6,7 @@ import AdminDashboard from './pages/AdminDashboard';
 import Login from './pages/Login';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
+import CursorGlow from './components/common/CursorGlow';
 
 // Loading screen shown while auth state is being determined
 function LoadingScreen() {
@@ -18,16 +20,22 @@ function LoadingScreen() {
 
 // Protects /admin/* routes: requires authenticated AND admin user
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const { user, isAdmin, loading } = useAuth();
+  const { user, isAdmin, loading, logout } = useAuth();
 
   // Wait for auth state to resolve before making any decision
   if (loading) return <LoadingScreen />;
 
   // Not authenticated at all → login page
-  if (!user) return <Navigate to="/login" replace />;
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
 
-  // Authenticated but not admin → login page shows "pending approval" message
-  if (!isAdmin) return <Navigate to="/login" replace />;
+  // Authenticated but NOT admin
+  if (!isAdmin) {
+    // Se estiver logado mas não for admin, garantimos que ele não "finja" ser um
+    // e o enviamos para o login onde verá a mensagem de "pendente"
+    return <Navigate to="/login" replace />;
+  }
 
   return <>{children}</>;
 }
@@ -52,6 +60,7 @@ function NotFound() {
 export default function App() {
   return (
     <AuthProvider>
+      <CursorGlow />
       <BrowserRouter>
         <Routes>
           {/* Public: Landing page */}

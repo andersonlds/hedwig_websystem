@@ -7,7 +7,7 @@ import { ExternalLink, Trash2, Upload, Loader2, GripVertical } from 'lucide-reac
 import { Reorder } from 'motion/react';
 
 export default function ManageReleases() {
-  const { data: initialReleases, refresh } = useSupabaseQuery<Release>('releases', 'order_index', true);
+  const { data: initialReleases } = useSupabaseQuery<Release>('releases', 'order_index', true);
   const [localReleases, setLocalReleases] = useState<Release[]>([]);
   const [isAdding, setIsAdding] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
@@ -46,7 +46,7 @@ export default function ManageReleases() {
       }
       
       setIsUpdatingOrder(false);
-      refresh();
+      setIsUpdatingOrder(false);
     }, 1000);
 
     setSaveTimeout(timeout);
@@ -97,7 +97,7 @@ export default function ManageReleases() {
     } else {
       setFormData({ title: '', coverUrl: '', spotifyLink: '', type: 'single' });
       setIsAdding(false);
-      refresh();
+      setIsAdding(false);
     }
   };
 
@@ -112,7 +112,7 @@ export default function ManageReleases() {
             await supabase.storage.from('covers').remove([`covers/${path}`]);
           }
         }
-        refresh();
+        // Real-time update handles the UI
       } else {
         alert('Erro ao excluir lançamento');
       }
@@ -131,7 +131,7 @@ export default function ManageReleases() {
       )}
 
       {isAdding && (
-        <div className="glass p-10 rounded-[2rem] mb-12 animate-in fade-in slide-in-from-top-4 duration-500">
+        <div className="glass p-6 md:p-10 rounded-[2rem] mb-12 animate-in fade-in slide-in-from-top-4 duration-500">
            <form onSubmit={handleSubmit} className="grid md:grid-cols-2 gap-8">
               <div className="space-y-2">
                 <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground ml-2">Título</label>

@@ -7,7 +7,7 @@ import { Trash2, Upload, Loader2, Camera, GripVertical } from 'lucide-react';
 import { Reorder } from 'motion/react';
 
 export default function ManageGallery() {
-  const { data: initialPhotos, refresh } = useSupabaseQuery<GalleryPhoto>('gallery', 'order_index', true);
+  const { data: initialPhotos } = useSupabaseQuery<GalleryPhoto>('gallery', 'order_index', true);
   const [localPhotos, setLocalPhotos] = useState<GalleryPhoto[]>([]);
   const [isUploading, setIsUploading] = useState(false);
   const [isUpdatingOrder, setIsUpdatingOrder] = useState(false);
@@ -44,7 +44,6 @@ export default function ManageGallery() {
       }
       
       setIsUpdatingOrder(false);
-      refresh();
     }, 1000); // Espera 1 segundo após o último movimento para salvar
 
     setSaveTimeout(timeout);
@@ -104,7 +103,6 @@ export default function ManageGallery() {
     }
 
     setIsUploading(false);
-    refresh();
   };
 
   const handleDelete = async (id: string, imageUrl: string) => {
@@ -117,7 +115,7 @@ export default function ManageGallery() {
             await supabase.storage.from('gallery').remove([`gallery/${path}`]);
           }
         }
-        refresh();
+        // Real-time UI update
       }
     }
   };

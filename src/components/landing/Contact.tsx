@@ -5,6 +5,7 @@ export default function Contact() {
   const [config, setConfig] = useState<any>(null);
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
   const [submitted, setSubmitted] = useState(false);
+  const [rateLimited, setRateLimited] = useState(false);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -26,6 +27,24 @@ export default function Contact() {
     setLoading(true);
 
     try {
+      // 0. Verifica com o "porteiro" (RPC) se o usuário enviou mensagem nos últimos 5 dias
+      const { data: hasSentRecently, error: rpcError } = await supabase.rpc('check_recent_contact', {
+        user_email: formData.email
+      });
+
+      if (rpcError) {
+        console.error("Erro na verificação de limite:", rpcError);
+        // Em caso de erro na checagem, podemos optar por barrar ou permitir. 
+        // Vamos permitir para não bloquear envios legítimos se o banco falhar na leitura.
+      } else if (hasSentRecently === true) {
+        // Já enviou nos últimos 5 dias
+        setRateLimited(true);
+        setLoading(false);
+        // Opcional: resetar após alguns segundos para permitir nova digitação
+        setTimeout(() => setRateLimited(false), 8000);
+        return; // Interrompe o processo aqui
+      }
+
       // 1. Salva diretamente no Supabase (Sem precisar de Edge Function)
       const { error: dbError } = await supabase
         .from('contacts')
@@ -79,7 +98,17 @@ export default function Contact() {
              <p className="text-white/40 text-sm max-w-sm mb-8">{description}</p>
              <a href={`mailto:${bookingEmail}`} className="text-primary text-xs font-black uppercase tracking-widest underline underline-offset-8 decoration-primary/20 hover:decoration-primary transition-all">{bookingEmail}</a>
           </div>
-          {submitted ? (
+          {rateLimited ? (
+             <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-3xl p-12 text-center flex flex-col items-center justify-center h-full animate-in fade-in zoom-in duration-500">
+                <div className="w-16 h-16 bg-yellow-500/20 rounded-full flex items-center justify-center mb-6 shadow-glow">
+                   <svg className="w-8 h-8 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                   </svg>
+                </div>
+                <h3 className="text-xl font-display font-black mb-2 tracking-tight text-yellow-500 uppercase">Aguarde um momento</h3>
+                <p className="text-white/60 text-sm">Você já nos enviou uma mensagem recentemente. Por favor, aguarde o nosso retorno antes de enviar novamente.</p>
+             </div>
+          ) : submitted ? (
              <div className="bg-primary/10 border border-primary/20 rounded-3xl p-12 text-center flex flex-col items-center justify-center h-full animate-in fade-in zoom-in duration-500">
                 <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mb-6 shadow-glow">
                    <svg className="w-8 h-8 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">

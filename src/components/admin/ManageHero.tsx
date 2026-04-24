@@ -137,9 +137,41 @@ export default function ManageHero() {
     <div>
       <SectionHeader title="CONFIGURAÇÃO DO HERO" description="Edite os textos e a imagem de destaque do seu site." />
 
-      <div className="grid lg:grid-cols-2 gap-12">
-        {/* Formulário */}
-        <div className="glass p-10 rounded-[2rem] space-y-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+        {/* Upload de Imagem — agora em primeiro */}
+        <div className="space-y-8 lg:order-2">
+          <div className="glass p-6 md:p-10 rounded-[2rem] space-y-6 md:space-y-8">
+              <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground ml-2 block mb-4">Imagem de Fundo (Background)</label>
+              <div className="aspect-video rounded-2xl overflow-hidden bg-white/5 border border-white/10 relative group mb-6">
+                 {config.image_url ? (
+                   <img src={config.image_url} className="w-full h-full object-cover" alt="Hero" />
+                 ) : (
+                   <div className="w-full h-full flex items-center justify-center text-muted-foreground text-[10px] font-bold tracking-widest uppercase">Sem Imagem</div>
+                 )}
+                 <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <div className="relative">
+                       <input 
+                        type="file" 
+                        accept="image/*" 
+                        onChange={handleFileUpload}
+                        className="absolute inset-0 opacity-0 cursor-pointer z-10"
+                       />
+                       <div className="px-6 py-3 bg-white text-black rounded-xl font-black text-[10px] tracking-widest flex items-center gap-2">
+                          {uploading ? <Loader2 className="h-3 w-3 animate-spin" /> : <Upload className="h-3 w-3" />}
+                          ALTERAR IMAGEM
+                       </div>
+                    </div>
+                 </div>
+              </div>
+              <p className="text-[9px] text-muted-foreground uppercase tracking-widest font-bold leading-relaxed">
+                Dica: Use imagens de alta resolução (1920x1080 ou superior). <br />
+                Formatos recomendados: JPG ou WebP.
+              </p>
+           </div>
+        </div>
+
+        {/* Formulário — agora em segundo na ordem mas em primeiro visualmente se quisermos */}
+        <div className="glass p-6 md:p-10 rounded-[2rem] space-y-6 md:space-y-8 lg:order-1">
            <div className="space-y-2">
               <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground ml-2">Subtítulo (Topo)</label>
               <input 
@@ -357,37 +389,7 @@ export default function ManageHero() {
            </button>
         </div>
 
-        {/* Upload de Imagem */}
-        <div className="space-y-8">
-           <div className="glass p-10 rounded-[2rem]">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground ml-2 block mb-4">Imagem de Fundo (Background)</label>
-              <div className="aspect-video rounded-2xl overflow-hidden bg-white/5 border border-white/10 relative group mb-6">
-                 {config.image_url ? (
-                   <img src={config.image_url} className="w-full h-full object-cover" alt="Hero" />
-                 ) : (
-                   <div className="w-full h-full flex items-center justify-center text-muted-foreground text-[10px] font-bold tracking-widest uppercase">Sem Imagem</div>
-                 )}
-                 <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                    <div className="relative">
-                       <input 
-                        type="file" 
-                        accept="image/*" 
-                        onChange={handleFileUpload}
-                        className="absolute inset-0 opacity-0 cursor-pointer z-10"
-                       />
-                       <div className="px-6 py-3 bg-white text-black rounded-xl font-black text-[10px] tracking-widest flex items-center gap-2">
-                          {uploading ? <Loader2 className="h-3 w-3 animate-spin" /> : <Upload className="h-3 w-3" />}
-                          ALTERAR IMAGEM
-                       </div>
-                    </div>
-                 </div>
-              </div>
-              <p className="text-[9px] text-muted-foreground uppercase tracking-widest font-bold leading-relaxed">
-                Dica: Use imagens de alta resolução (1920x1080 ou superior). <br />
-                Formatos recomendados: JPG ou WebP.
-              </p>
-           </div>
-        </div>
+
       </div>
     </div>
   );

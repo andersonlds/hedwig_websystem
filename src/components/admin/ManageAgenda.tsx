@@ -6,7 +6,7 @@ import SectionHeader from './SectionHeader';
 import { ExternalLink, Trash2, Calendar as CalendarIcon, Edit2 } from 'lucide-react';
 
 export default function ManageAgenda() {
-  const { data: shows, refresh } = useSupabaseQuery<Show>('shows', 'date', true);
+  const { data: shows } = useSupabaseQuery<Show>('shows', 'date', true);
   const [isAdding, setIsAdding] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [formData, setFormData] = useState({ name: '', city: '', date: '', ticketLink: '' });
@@ -45,7 +45,6 @@ export default function ManageAgenda() {
       setFormData({ name: '', city: '', date: '', ticketLink: '' });
       setIsAdding(false);
       setEditingId(null);
-      refresh();
       alert('Agenda atualizada!');
     }
   };
@@ -70,7 +69,7 @@ export default function ManageAgenda() {
         console.error('Error deleting show:', error);
         alert('Erro ao excluir evento');
       } else {
-        refresh();
+        // Atualização em tempo real cuida da interface
       }
     }
   };
@@ -93,7 +92,7 @@ export default function ManageAgenda() {
       />
       
       {isAdding && (
-        <div className="glass p-10 rounded-[2rem] mb-12 animate-in fade-in zoom-in-95 duration-500">
+        <div className="glass p-6 md:p-10 rounded-[2rem] mb-12 animate-in fade-in slide-in-from-top-4 duration-500">
            <div className="flex items-center gap-2 mb-8 text-primary">
               <Edit2 size={14} />
               <span className="text-[10px] font-black uppercase tracking-[0.3em]">
@@ -127,37 +126,84 @@ export default function ManageAgenda() {
         </div>
       )}
 
-      <div className="space-y-4">
-        {shows.map(show => (
-          <div key={show.id} className="glass p-6 rounded-2xl flex items-center justify-between group hover:border-primary/30 transition-all border border-transparent">
-            <div className="flex items-center gap-6">
-               <div className="h-12 w-12 rounded-xl bg-secondary flex items-center justify-center">
-                  <CalendarIcon className="text-primary h-5 w-5" />
-               </div>
-               <div>
-                  <h4 className="font-bold text-foreground uppercase tracking-tight">{show.name}</h4>
-                  <div className="flex items-center gap-4 mt-1">
-                    <p className="text-[10px] text-primary font-bold uppercase tracking-widest">{show.city}</p>
-                    <span className="h-1 w-1 rounded-full bg-white/10" />
-                    <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">{formatDate(show.date)}</p>
+      <div className="space-y-12">
+        {/* Próximos Shows */}
+        <div className="space-y-4">
+          <h3 className="text-xs font-bold text-white/40 uppercase tracking-widest mb-4 flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+            Próximos Shows
+          </h3>
+          {shows.filter(show => new Date(show.date) >= new Date(new Date().setHours(0,0,0,0))).length > 0 ? (
+            shows
+              .filter(show => new Date(show.date) >= new Date(new Date().setHours(0,0,0,0)))
+              .map(show => (
+                <div key={show.id} className="glass p-4 md:p-6 rounded-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4 group hover:border-primary/30 transition-all border border-transparent">
+                  <div className="flex items-center gap-6">
+                     <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center">
+                        <CalendarIcon className="text-primary h-5 w-5" />
+                     </div>
+                     <div>
+                        <h4 className="font-bold text-foreground uppercase tracking-tight">{show.name}</h4>
+                        <div className="flex items-center gap-4 mt-1">
+                          <p className="text-[10px] text-primary font-bold uppercase tracking-widest">{show.city}</p>
+                          <span className="h-1 w-1 rounded-full bg-white/10" />
+                          <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">{formatDate(show.date)}</p>
+                        </div>
+                     </div>
                   </div>
-               </div>
-            </div>
-            <div className="flex items-center gap-2">
-               <button onClick={() => handleEdit(show)} title="Editar" className="p-3 rounded-xl hover:bg-white/5 text-muted-foreground hover:text-primary transition-colors">
-                 <Edit2 className="h-4 w-4" />
-               </button>
-               {show.ticketLink && (
-                 <a href={show.ticketLink} target="_blank" rel="noreferrer" title="Link do Ticket" className="p-3 rounded-xl hover:bg-white/5 text-muted-foreground hover:text-primary transition-colors">
-                   <ExternalLink className="h-4 w-4" />
-                 </a>
-               )}
-               <button onClick={() => handleDelete(show.id)} title="Excluir" className="p-3 rounded-xl text-white/20 hover:text-destructive hover:bg-destructive/10 transition-colors">
-                 <Trash2 className="h-4 w-4" />
-               </button>
-            </div>
+                  <div className="flex items-center gap-2 w-full md:w-auto justify-end">
+                     <button onClick={() => handleEdit(show)} title="Editar" className="p-3 rounded-xl hover:bg-white/5 text-muted-foreground hover:text-primary transition-colors">
+                       <Edit2 className="h-4 w-4" />
+                     </button>
+                     {show.ticketLink && (
+                       <a href={show.ticketLink} target="_blank" rel="noreferrer" title="Link do Ticket" className="p-3 rounded-xl hover:bg-white/5 text-muted-foreground hover:text-primary transition-colors">
+                         <ExternalLink className="h-4 w-4" />
+                       </a>
+                     )}
+                     <button onClick={() => handleDelete(show.id)} title="Excluir" className="p-3 rounded-xl text-white/20 hover:text-destructive hover:bg-destructive/10 transition-colors">
+                       <Trash2 className="h-4 w-4" />
+                     </button>
+                  </div>
+                </div>
+              ))
+          ) : (
+            <p className="text-xs text-white/20 font-bold uppercase tracking-widest">Nenhum show futuro agendado.</p>
+          )}
+        </div>
+
+        {/* Shows Passados */}
+        {shows.filter(show => new Date(show.date) < new Date(new Date().setHours(0,0,0,0))).length > 0 && (
+          <div className="space-y-4 pt-8 border-t border-white/5">
+            <h3 className="text-xs font-bold text-white/20 uppercase tracking-widest mb-4 flex items-center gap-2">
+               Histórico de Shows
+            </h3>
+            {shows
+              .filter(show => new Date(show.date) < new Date(new Date().setHours(0,0,0,0)))
+              .reverse() // Inverte para mostrar o show passado mais recente primeiro
+              .map(show => (
+                <div key={show.id} className="bg-white/5 p-4 md:p-6 rounded-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4 group hover:border-white/20 transition-all border border-transparent opacity-60">
+                  <div className="flex items-center gap-6">
+                     <div className="h-12 w-12 rounded-xl bg-black/20 flex items-center justify-center">
+                        <CalendarIcon className="text-white/40 h-5 w-5" />
+                     </div>
+                     <div>
+                        <h4 className="font-bold text-white/60 uppercase tracking-tight line-through decoration-white/20">{show.name}</h4>
+                        <div className="flex items-center gap-4 mt-1">
+                          <p className="text-[10px] text-white/40 font-bold uppercase tracking-widest">{show.city}</p>
+                          <span className="h-1 w-1 rounded-full bg-white/5" />
+                          <p className="text-[10px] text-white/30 font-bold uppercase tracking-widest">{formatDate(show.date)}</p>
+                        </div>
+                     </div>
+                  </div>
+                  <div className="flex items-center gap-2 w-full md:w-auto justify-end">
+                     <button onClick={() => handleDelete(show.id)} title="Excluir" className="p-3 rounded-xl text-white/20 hover:text-destructive hover:bg-destructive/10 transition-colors">
+                       <Trash2 className="h-4 w-4" />
+                     </button>
+                  </div>
+                </div>
+              ))}
           </div>
-        ))}
+        )}
       </div>
     </div>
   );
